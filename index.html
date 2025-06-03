@@ -1,0 +1,1973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bartender MOE - Professional Blending Tool</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #4A494A;
+            background-repeat: no-repeat;
+            background-position: top right;
+            background-size: 800px;
+            background-attachment: fixed;
+            color: #1a202c;
+            min-height: 100vh;
+            padding: 16px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #ffffff;
+            overflow: hidden;
+            position: relative;
+        }
+
+        header {
+            background-color: #4A494A;
+            padding: 32px 24px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header-illustration {
+    max-width: 100%;
+    height: auto;
+    margin-top: 25px;
+    margin-bottom: 16px;
+    border-radius: 12px;
+}
+
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 8px;
+            letter-spacing: -0.025em;
+        }
+
+        .tagline {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.4;
+        }
+
+        .disclaimer {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin: 20px;
+            text-align: center;
+            font-weight: 500;
+            color: #dc2626;
+            font-size: 0.875rem;
+        }
+
+        main {
+            padding: 24px;
+        }
+
+        .section-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #107DC0;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .instructions {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .instructions ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .instructions li {
+            padding: 6px 0 6px 20px;
+            position: relative;
+        }
+
+        .instructions li:before {
+            content: "•";
+            color: #107DC0;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        /* Import Section */
+        .import-section {
+            background: #f0f9ff;
+            border: 2px dashed #107DC0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .import-section .help-text {
+            font-size: 0.875rem;
+            color: #64748b;
+            margin-top: 8px;
+        }
+
+        /* Common Blends Dropdown */
+        .common-blends-section {
+            margin-bottom: 20px;
+        }
+
+        .common-blend-select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 15px;
+            background: white;
+            cursor: pointer;
+        }
+
+        /* Live Summary */
+        .live-summary {
+            position: sticky;
+            top: 20px;
+            background: #107DC0;
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+
+        .summary-item {
+            text-align: center;
+        }
+
+        .summary-label {
+            font-size: 0.75rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .summary-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+
+        /* Blend Steps */
+        .blend-steps {
+            margin-bottom: 24px;
+        }
+
+        .blend-step {
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .step-header {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .step-number {
+            background: #107DC0;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+        }
+
+        .step-connector {
+            position: absolute;
+            left: 11px;
+            top: 32px;
+            bottom: -16px;
+            width: 2px;
+            background: #e2e8f0;
+        }
+
+        /* Input Rows */
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding: 16px;
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .input-row:hover {
+            border-color: #cbd5e1;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .input-row.reduction-row {
+            background: #fffbeb;
+            border-color: #fbbf24;
+            grid-template-columns: 1fr auto;
+        }
+
+        .input-row.processing {
+            opacity: 0.5;
+            transform: scale(0.98);
+        }
+
+        .autocomplete-container {
+            position: relative;
+        }
+
+        .ingredient-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .ingredient-input:focus {
+            outline: none;
+            border-color: #107DC0;
+            box-shadow: 0 0 0 3px rgba(16, 125, 192, 0.1);
+        }
+
+        .volume-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .volume-input {
+            width: 100px;
+            padding: 12px 16px;
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .volume-input:focus {
+            outline: none;
+            border-color: #107DC0;
+            box-shadow: 0 0 0 3px rgba(16, 125, 192, 0.1);
+        }
+
+        .volume-input.error {
+            border-color: #ef4444;
+        }
+
+        .remove-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fee2e2;
+            color: #dc2626;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .remove-btn:hover {
+            background: #fecaca;
+            transform: scale(1.05);
+        }
+
+        .reduction-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .reduction-label {
+            color: #92400e;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .reduction-input {
+            width: 100px;
+            padding: 10px 14px;
+            background: #ffffff;
+            border: 2px solid #fbbf24;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .reduction-note {
+            font-size: 12px;
+            color: #92400e;
+            font-style: italic;
+            margin-left: 8px;
+        }
+
+        /* Autocomplete */
+        .autocomplete-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border: 2px solid #107DC0;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            max-height: 180px;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .autocomplete-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            font-size: 14px;
+        }
+
+        .autocomplete-item:hover,
+        .autocomplete-item.selected {
+            background: #e6f4ff;
+            color: #107DC0;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin: 32px 0;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            white-space: nowrap;
+            min-height: 44px;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-primary {
+            background: #107DC0;
+            color: white;
+            font-size: 16px;
+            padding: 14px 28px;
+        }
+
+        .btn-primary:hover {
+            background: #0e6ba8;
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #475569;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #d97706;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: #64748b;
+            padding: 8px 12px;
+        }
+
+        .btn-ghost:hover {
+            background: #f8fafc;
+            box-shadow: none;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #64748b;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        /* Output Section */
+        .output-section {
+            margin-top: 32px;
+            padding: 24px;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            display: none;
+        }
+
+        .output-section.active {
+            display: block;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .output-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #107DC0;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .output-content {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: ui-monospace, 'SF Mono', Monaco, 'Cascadia Code', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #374151;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        /* Progress Indicator */
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin: 16px 0;
+        }
+
+        .progress-step {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .progress-step.active {
+            background: #107DC0;
+            transform: scale(1.2);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            max-width: 300px;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.error {
+            background: #dc2626;
+        }
+
+        .toast.warning {
+            background: #f59e0b;
+        }
+
+        /* Import Dialog */
+        .dialog-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .dialog-content {
+            background: white;
+            padding: 32px;
+            border-radius: 12px;
+            max-width: 480px;
+            width: 90%;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .dialog-content h3 {
+            margin-bottom: 16px;
+            color: #1f2937;
+            font-size: 1.25rem;
+        }
+
+        .import-options {
+            margin: 20px 0;
+        }
+
+        .import-option {
+            display: block;
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .import-option:hover {
+            border-color: #107DC0;
+            background: #f0f9ff;
+        }
+
+        .import-option input[type="radio"] {
+            margin-right: 8px;
+        }
+
+        .import-option small {
+            display: block;
+            color: #64748b;
+            margin-left: 24px;
+            margin-top: 4px;
+        }
+
+        .file-input-wrapper {
+            margin: 20px 0;
+        }
+
+        .file-input-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: #f1f5f9;
+            color: #475569;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .file-input-label:hover {
+            background: #e2e8f0;
+        }
+
+        .dialog-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        /* Tooltips */
+        .has-tooltip {
+            position: relative;
+        }
+
+        .has-tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            white-space: nowrap;
+            z-index: 1000;
+            pointer-events: none;
+            margin-bottom: 4px;
+        }
+
+        .has-tooltip:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-top: 6px solid #333;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            margin-bottom: -2px;
+        }
+
+        /* History Controls */
+        .history-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .history-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f1f5f9;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .history-btn:hover:not(:disabled) {
+            background: #e2e8f0;
+        }
+
+        .history-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            body {
+                background-size: 500px;
+            }
+
+
+            
+            .live-summary {
+                position: relative;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .input-row {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            
+            .volume-container,
+            .remove-btn {
+                justify-self: stretch;
+            }
+
+            .volume-input {
+                width: 100%;
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+
+            .ingredient-input {
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+            
+            .btn {
+                flex: 1;
+                min-width: 0;
+                min-height: 44px; /* Apple touch target */
+                padding: 12px 16px;
+            }
+            
+            .btn-primary {
+                flex: 1 1 100%;
+            }
+
+            .dialog-content {
+                padding: 24px;
+            }
+
+            .step-connector {
+                display: none;
+            }
+        }
+
+        /* Loading State */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .loading {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+                <img src="bartender-moe.png" alt="Bartender Moe Illustration" class="header-illustration">
+        </header>
+
+        <div class="disclaimer">
+            For professional bartenders and adults aged 18+ only. This tool is for responsible drink development.
+        </div>
+        
+        <main>
+            <div class="section-card">
+                <h3 class="section-title">Quick Start</h3>
+                <div class="instructions">
+                    <ul>
+                        <li>Add ingredients with their volumes (mL)</li>
+                        <li>Import saved blends to combine them</li>
+                        <li>Use reductions for tasting/evaporation losses</li>
+                        <li>Calculate your final blend composition</li>
+                        <li>Export and share your creation</li>
+                    </ul>
+                </div>
+            </div>
+
+
+
+            <!-- Live Summary -->
+            <div class="live-summary">
+                <div class="summary-item">
+                    <div class="summary-label">Total Volume</div>
+                    <div class="summary-value" id="totalVolume">0 mL</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Ingredients</div>
+                    <div class="summary-value" id="ingredientCount">0</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Reductions</div>
+                    <div class="summary-value" id="reductionCount">0</div>
+                </div>
+            </div>
+
+            <!-- Import Section -->
+            <div class="import-section">
+                <button class="btn btn-secondary" onclick="showImportDialog()">
+                    <span>📥</span> Import Previous Blend
+                </button>
+                <p class="help-text">Import one or more saved blends to use as ingredients</p>
+            </div>
+
+            <!-- Common Blends -->
+            <div class="common-blends-section">
+                <select class="common-blend-select" onchange="addCommonBlend(this.value); this.value=''">
+                    <option value="">Quick add common blend ingredients...</option>
+                    <option value="Simple Syrup">Simple Syrup (Sugar + Water)</option>
+                    <option value="Honey Syrup">Honey Syrup (Honey + Water)</option>
+                    <option value="Sour Mix">Sour Mix (Lemon + Lime + Simple)</option>
+                    <option value="Demerara Syrup">Demerara Syrup (Demerara + Water)</option>
+                    <option value="Negroni Base">🍊 Negroni Base (Gin + Campari + Vermouth)</option>
+                    <option value="Ginger Syrup">🌶️ Ginger Syrup (Ginger Juice + Sugar)</option>
+                    <option value="Grenadine">🍒 Grenadine (Pomegranate + Sugar)</option>
+                    <option value="Orgeat">🌰 Orgeat (Almond + Sugar + Brandy)</option>
+                    <option value="Falernum">🌿 Falernum (Lime + Sugar + Spices)</option>
+                    <option value="Cinnamon Syrup">🍂 Cinnamon Syrup (Water + Sugar + Cinnamon)</option>
+                    <option value="Vanilla Syrup">🍦 Vanilla Syrup (Water + Sugar + Vanilla)</option>
+                    <option value="Bloody Mary Mix">🍅 Bloody Mary Mix (Tomato + Spices)</option>
+                    <option value="Old Fashioned Mix">🥃 Old Fashioned Mix (Bourbon + Sugar + Bitters)</option>
+                    <option value="Espresso Martini Base">☕ Espresso Martini Base (Coffee + Vanilla + Liqueur)</option>
+                    <option value="Saline Solution">🧂 Saline Solution 4% (Salt + Water)</option>
+                    <option value="Acid-Adjusted Juice">🍋 Acid-Adjusted Juice (Citric Acid + Water)</option>
+                </select>
+            </div>
+
+            <!-- Blend Steps -->
+            <div class="blend-steps" id="blendSteps">
+                <div class="blend-step" data-step="1">
+                    <div class="step-header">
+                        <span class="step-number">1</span>
+                        <span>Initial Ingredients</span>
+                    </div>
+                    <div class="step-connector"></div>
+                    <div class="blend-inputs" id="blendInputs">
+                        <div class="empty-state" id="emptyState">
+                            <div class="empty-state-icon">🧪</div>
+                            <p>Start by adding your first ingredient</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="addInputRow()">
+                    <span>➕</span> Add Ingredient
+                </button>
+                <button class="btn btn-warning" onclick="addReductionRow()">
+                    <span>📉</span> Add Reduction
+                </button>
+                <button class="btn btn-primary" onclick="makeBlend()" id="makeBlendBtn" disabled>
+                    <span>🔥</span> Calculate Blend
+                </button>
+                <button class="btn btn-secondary" onclick="resetAll()">
+                    <span>🔄</span> Reset
+                </button>
+            </div>
+            
+            <div class="output-section" id="outputSection">
+                <h2 class="output-title">Your Blend Composition</h2>
+                <div class="output-content" id="outputContent"></div>
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="goBack()">
+                        <span>←</span> Go Back
+                    </button>
+                    <button class="btn btn-secondary" onclick="nameBlend()">
+                        <span>📝</span> Name Blend
+                    </button>
+                    <button class="btn btn-success" onclick="exportBlend()">
+                        <span>💾</span> Export JSON
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        let blendData = [];
+        let currentBlend = {};
+        let history = [];
+        let historyIndex = -1;
+        let currentStep = 1;
+        let importedBlends = [];
+        
+        const commonIngredients = [
+            // Diageo Products
+            'Ketel One Vodka', 'Ketel One Citroen', 'Ketel One Oranje', 'Ketel One Cucumber & Mint', 'Ketel One Peach & Orange Blossom', 'Ketel One Grapefruit & Rose', 'Ketel One Botanical',
+            'Ciroc Vodka', 'Ciroc Apple', 'Ciroc Peach', 'Ciroc Pineapple', 'Ciroc Red Berry', 'Ciroc Coconut', 'Ciroc Mango',
+            'Smirnoff Vodka', 'Smirnoff No. 21', 'Smirnoff 100 Proof', 'Smirnoff Vanilla', 'Smirnoff Green Apple', 'Smirnoff Raspberry',
+            'Tanqueray London Dry Gin', 'Tanqueray No. Ten', 'Tanqueray Rangpur', 'Tanqueray Flor de Sevilla', 'Tanqueray Royale',
+            'Gordon\'s Gin', 'Gordon\'s Pink Gin', 'Gordon\'s Sicilian Lemon',
+            'Aviation American Gin',
+            'Johnnie Walker Black Label', 'Johnnie Walker Red Label', 'Johnnie Walker Double Black', 'Johnnie Walker Gold Label', 'Johnnie Walker Blue Label', 'Johnnie Walker Green Label', 'Johnnie Walker 18 Year Old',
+            'Talisker 10 Year Old', 'Talisker Storm', 'Talisker Skye', 'Talisker 18 Year Old',
+            'Lagavulin 16 Year Old', 'Lagavulin 8 Year Old', 'Lagavulin Distillers Edition',
+            'Oban 14 Year Old', 'Oban Little Bay', 'Oban Distillers Edition',
+            'The Singleton 12 Year Old', 'The Singleton 15 Year Old', 'The Singleton 18 Year Old',
+            'Cardhu 12 Year Old', 'Cardhu Gold Reserve', 'Cardhu 18 Year Old',
+            'Crown Royal', 'Crown Royal Regal Apple', 'Crown Royal Vanilla', 'Crown Royal Peach', 'Crown Royal Salted Caramel',
+            'Bulleit Bourbon', 'Bulleit Rye', 'Bulleit 10 Year', 'Bulleit Barrel Strength',
+            'Don Julio Blanco', 'Don Julio Reposado', 'Don Julio Anejo', 'Don Julio 70', 'Don Julio 1942', 'Don Julio Real', 'Don Julio Rosado',
+            'Casamigos Blanco', 'Casamigos Reposado', 'Casamigos Anejo', 'Casamigos Mezcal',
+            'DeLeon Tequila Platinum', 'DeLeon Reposado', 'DeLeon Anejo',
+            'Captain Morgan Original Spiced', 'Captain Morgan White Rum', 'Captain Morgan Black Spiced', 'Captain Morgan Private Stock',
+            'Ron Zacapa Centenario 23', 'Ron Zacapa XO', 'Ron Zacapa Edicion Negra',
+            'Baileys Original Irish Cream', 'Baileys Chocolat Luxe', 'Baileys Strawberries & Cream', 'Baileys Salted Caramel',
+            'Guinness Draught', 'Guinness Extra Stout', 'Guinness Foreign Extra Stout',
+            'Mr Black Coffee Liqueur',
+            
+            // 100 Common Cocktail Ingredients
+            'Sugar Syrup Rich (2 Sugar to 1 Water)', 'Lemon Juice', 'Lime Juice', 'Gin', 'Vodka',
+            'Aromatic Bitters', 'Angostura Bitters', 'Cognac', 'Brandy', 'Dry Vermouth',
+            'Sweet Vermouth', 'Rosso Vermouth', 'Rouge Vermouth', 'Orange Bitters', 'Orange Juice',
+            'Triple Sec', 'Cointreau', 'Pineapple Juice', 'White Rum', 'Light Rum',
+            'Bourbon Whiskey', 'Egg White', 'Soda Water', 'Club Soda', 'Tequila Reposado',
+            'Grenadine', 'Pomegranate Syrup', 'Grapefruit Juice', 'Apple Juice', 'Apple Cider',
+            'Maraschino Liqueur', 'Absinthe', 'Absinthe Verte', 'Cranberry Juice', 'Campari',
+            'Italian Red Bitter', 'Scotch Whisky', 'Blended Scotch', 'Cream', 'Half and Half',
+            'Elderflower Liqueur', 'St-Germain', 'Champagne', 'Brut Sparkling Wine', 'Grand Marnier',
+            'Cognac Orange Liqueur', 'Calvados', 'Applejacks', 'Rye Whiskey', '100 Proof Rye',
+            'Apricot Brandy', 'Apricot Liqueur', 'Mint Leaves', 'Creole Bitters', 'Peychaud\'s Bitters',
+            'Gold Rum', 'Mellow Light Rum', 'Coffee Liqueur', 'Kahlua', 'Benedictine',
+            'D.O.M. Benedictine', 'Amaretto', 'Amaretto Liqueur', 'Aged Rum', 'Dark Rum',
+            'Orange Curacao', 'Blue Curacao', 'Chartreuse Verte', 'Green Chartreuse', 'Mezcal',
+            'Joven Mezcal', 'Creme de Cacao', 'White Creme de Cacao', 'Cherry Brandy', 'Cherry Liqueur',
+            'Gentian Liqueur', 'Suze', 'Salers', 'Honey Syrup', 'Black Raspberry Liqueur',
+            'Chambord', 'Orgeat', 'Orgeat Syrup', 'Almond Syrup', 'Blanco Tequila',
+            'Agave Syrup', 'Agave Nectar', 'Saline Solution', 'Cachaca', 'Fino Sherry',
+            'Chartreuse Jaune', 'Yellow Chartreuse', 'Ginger Ale', 'Falernum', 'Falernum Liqueur',
+            'Creme de Banane', 'Banana Liqueur', 'Lillet Blanc', 'Aromatized Wine', 'Peated Scotch',
+            'Islay Scotch', 'Maple Syrup', 'Aperol', 'Orange Aperitivo', 'Creme de Cassis',
+            'Cassis Liqueur', 'Irish Cream Liqueur', 'Irish Whiskey', 'Irish Blended Whiskey',
+            'Oude Genever', 'Genever', 'Tawny Port', 'Port Wine', 'Bianco Vermouth',
+            'Blanc Vermouth', 'Tonic Water', 'Citrus Vodka', 'Citrus-Flavoured Vodka', 'Lime Cordial',
+            'Rose\'s Lime', 'Raspberries', 'Fresh Raspberries', 'Galliano', 'Galliano L\'Autentico',
+            'Prosecco', 'Prosecco Sparkling Wine', 'Peach Schnapps', 'Peach Liqueur', 'Espresso',
+            'Espresso Coffee', 'Drambuie', 'Drambuie Liqueur', 'Dubonnet Rouge', 'French Rouge Wine',
+            'Ginger Liqueur', 'Domaine de Canton', 'Pisco', 'Vanilla Vodka', 'Vanilla-Flavoured Vodka',
+            'Chocolate Bitters', 'Limoncello', 'Limoncello Liqueur', 'Honey', 'Fresh Honey',
+            'Milk', 'Whole Milk', 'Full Fat Milk', 'Sauvignon Blanc', 'White Wine',
+            'Cynar', 'Carciofo Amaro', 'White Creme de Menthe', 'Peppermint Liqueur', 'Melon Liqueur',
+            'Midori', 'Ginger Beer', 'Vanilla Sugar Syrup', 'Vanilla Syrup', 'Sloe Gin',
+            'Sloe Gin Liqueur', 'Bison Grass Vodka', 'Zubrowka', 'Coconut Rum', 'Malibu',
+            'Amaro Montenegro', 'Dark Creme de Cacao', 'Dark Chocolate Liqueur', 'Overproof Rum',
+            'Overproof White Rum', 'Lemon-Lime Soda', 'Sprite', '7-Up', 'Pedro Ximenez Sherry',
+            'PX Sherry', 'Simple Syrup', 'Demerara Syrup', 'Rich Simple Syrup', 'Cold Brew Coffee',
+            'Cold Brew Concentrate', 'Water', 'Ice', 'Crushed Ice', 'Sugar', 'White Sugar',
+            'Demerara Sugar', 'Fresh Ginger Juice', 'Ginger Juice', 'Pomegranate Juice', 'Orange Blossom Water',
+            'Rose Water', 'Almond Milk', 'Almond Extract', 'Clove Tincture', 'Cinnamon Tincture',
+            'Cinnamon Sticks', 'Vanilla Beans', 'Vanilla Extract', 'Tomato Juice', 'Worcestershire Sauce',
+            'Hot Sauce', 'Tabasco', 'Horseradish', 'Celery Salt', 'Citric Acid', 'Salt', 'Fine Salt'
+        ];
+
+        const commonBlends = {
+            "Simple Syrup": [
+                { name: "White Sugar", volume: 500 },
+                { name: "Water", volume: 500 }
+            ],
+            "Honey Syrup": [
+                { name: "Honey", volume: 300 },
+                { name: "Water", volume: 200 }
+            ],
+            "Sour Mix": [
+                { name: "Lemon Juice", volume: 250 },
+                { name: "Lime Juice", volume: 250 },
+                { name: "Simple Syrup", volume: 250 }
+            ],
+            "Demerara Syrup": [
+                { name: "Demerara Sugar", volume: 500 },
+                { name: "Water", volume: 500 }
+            ],
+            "Negroni Base": [
+                { name: "Gin", volume: 333 },
+                { name: "Campari", volume: 333 },
+                { name: "Sweet Vermouth", volume: 333 }
+            ],
+            "Ginger Syrup": [
+                { name: "Fresh Ginger Juice", volume: 400 },
+                { name: "Sugar", volume: 600 }
+            ],
+            "Grenadine": [
+                { name: "Pomegranate Juice", volume: 500 },
+                { name: "White Sugar", volume: 500 },
+                { name: "Orange Blossom Water", volume: 3 }
+            ],
+            "Orgeat": [
+                { name: "Almond Milk", volume: 300 },
+                { name: "Sugar", volume: 600 },
+                { name: "Brandy", volume: 50 },
+                { name: "Orange Blossom Water", volume: 50 }
+            ],
+            "Falernum": [
+                { name: "Lime Juice", volume: 300 },
+                { name: "Sugar Syrup", volume: 400 },
+                { name: "Ginger Juice", volume: 100 },
+                { name: "Almond Extract", volume: 50 },
+                { name: "Clove Tincture", volume: 50 },
+                { name: "Water", volume: 100 }
+            ],
+            "Cinnamon Syrup": [
+                { name: "Water", volume: 500 },
+                { name: "Sugar", volume: 500 }
+            ],
+            "Vanilla Syrup": [
+                { name: "Water", volume: 500 },
+                { name: "Sugar", volume: 500 },
+                { name: "Vanilla Extract", volume: 10 }
+            ],
+            "Bloody Mary Mix": [
+                { name: "Tomato Juice", volume: 600 },
+                { name: "Lemon Juice", volume: 100 },
+                { name: "Worcestershire Sauce", volume: 20 },
+                { name: "Hot Sauce", volume: 10 },
+                { name: "Horseradish", volume: 20 },
+                { name: "Celery Salt", volume: 10 },
+                { name: "Water", volume: 240 }
+            ],
+            "Old Fashioned Mix": [
+                { name: "Bourbon", volume: 800 },
+                { name: "Rich Sugar Syrup", volume: 100 },
+                { name: "Aromatic Bitters", volume: 100 }
+            ],
+            "Espresso Martini Base": [
+                { name: "Cold Brew Concentrate", volume: 500 },
+                { name: "Vanilla Syrup", volume: 300 },
+                { name: "Coffee Liqueur", volume: 200 }
+            ],
+            "Saline Solution": [
+                { name: "Fine Salt", volume: 40 },
+                { name: "Water", volume: 960 }
+            ],
+            "Acid-Adjusted Juice": [
+                { name: "Citric Acid", volume: 10 },
+                { name: "Water", volume: 990 }
+            ]
+        };
+
+        function init() {
+            updateEmptyState();
+            updateMakeButton();
+            updateLiveSummary();
+            saveState();
+            
+            // Load example only on first visit
+            if (!localStorage.getItem('bartenderMoeVisited')) {
+                setTimeout(() => {
+                    loadExampleBlend();
+                    localStorage.setItem('bartenderMoeVisited', 'true');
+                }, 500);
+            }
+        }
+
+        function loadExampleBlend() {
+            const examples = [
+                { name: "Ketel One Vodka", volume: 50 },
+                { name: "Lime Juice", volume: 20 },
+                { name: "Simple Syrup", volume: 15 },
+                { name: "Blue Curacao", volume: 10 }
+            ];
+            
+            examples.forEach(item => {
+                addInputRow(item.name, item.volume);
+            });
+            
+            showToast("Example blend loaded! Try calculating it.");
+        }
+
+        function addCommonBlend(blendName) {
+            if (!blendName) return;
+            
+            const blend = commonBlends[blendName];
+            if (!blend) return;
+            
+            blend.forEach(ingredient => {
+                addInputRow(ingredient.name, ingredient.volume);
+            });
+            
+            showToast(`Added ${blendName} ingredients`);
+            saveState();
+        }
+
+        function addInputRow(name = '', volume = '', targetContainer = null) {
+            const container = targetContainer || getCurrentStepContainer();
+            const emptyState = container.querySelector('.empty-state');
+            
+            if (emptyState) {
+                emptyState.style.display = 'none';
+            }
+            
+            const row = document.createElement('div');
+            row.className = 'input-row';
+            const uniqueId = 'autocomplete-' + Date.now() + Math.random();
+            
+            row.innerHTML = `
+                <div class="autocomplete-container">
+                    <input type="text" 
+                           class="ingredient-input" 
+                           placeholder="Enter ingredient name" 
+                           value="${name}" 
+                           oninput="handleInput(this); handleAutocomplete(this)" 
+                           onkeydown="handleAutocompleteKeydown(event, this)"
+                           onfocus="showAutocomplete(this)"
+                           onblur="validateInput(this)"
+                           data-autocomplete-id="${uniqueId}">
+                    <div id="${uniqueId}" class="autocomplete-dropdown" style="display: none;"></div>
+                </div>
+                <div class="volume-container">
+                    <input type="number" 
+                           class="volume-input" 
+                           placeholder="0" 
+                           value="${volume}" 
+                           min="0" 
+                           step="0.1"
+                           oninput="handleInput(this)"
+                           onblur="validateInput(this)">
+                    <span style="margin-left: 4px; color: #64748b;">mL</span>
+                </div>
+                <button class="remove-btn" onclick="removeRow(this)" title="Remove ingredient">×</button>
+            `;
+            
+            container.appendChild(row);
+            
+            // Auto-focus the ingredient input for new rows
+            if (!name) {
+                setTimeout(() => {
+                    row.querySelector('.ingredient-input').focus();
+                }, 100);
+            }
+            
+            updateMakeButton();
+            updateProgress();
+            updateLiveSummary();
+            
+            // Add click outside listener
+            document.addEventListener('click', function(e) {
+                if (!row.contains(e.target)) {
+                    const dropdown = document.getElementById(uniqueId);
+                    if (dropdown) dropdown.style.display = 'none';
+                }
+            });
+        }
+
+        function getCurrentStepContainer() {
+            const currentStepDiv = document.querySelector(`.blend-step[data-step="${currentStep}"] .blend-inputs`);
+            if (currentStepDiv) return currentStepDiv;
+            
+            // If not found, return the main container
+            return document.getElementById('blendInputs');
+        }
+
+        function addReductionRow() {
+            // Create new step
+            currentStep++;
+            const stepsContainer = document.getElementById('blendSteps');
+            
+            const newStep = document.createElement('div');
+            newStep.className = 'blend-step';
+            newStep.setAttribute('data-step', currentStep);
+            newStep.innerHTML = `
+                <div class="step-header">
+                    <span class="step-number">${currentStep}</span>
+                    <span>Reduction</span>
+                </div>
+                <div class="step-connector"></div>
+                <div class="blend-inputs"></div>
+            `;
+            stepsContainer.appendChild(newStep);
+            
+            const container = newStep.querySelector('.blend-inputs');
+            
+            const row = document.createElement('div');
+            row.className = 'input-row reduction-row';
+            row.innerHTML = `
+                <div class="reduction-content">
+                    <span class="reduction-label">Reduce by:</span>
+                    <input type="number" 
+                           class="reduction-input" 
+                           placeholder="0" 
+                           step="0.1" 
+                           min="0"
+                           oninput="handleInput(this)">
+                    <span style="font-size: 14px; color: #92400e;">mL</span>
+                    <span class="reduction-note">for tasting/evaporation</span>
+                </div>
+                <button class="remove-btn" onclick="removeReductionStep(this)" title="Remove reduction">×</button>
+            `;
+            container.appendChild(row);
+            
+            // Create next ingredient step
+            currentStep++;
+            const nextStep = document.createElement('div');
+            nextStep.className = 'blend-step';
+            nextStep.setAttribute('data-step', currentStep);
+            nextStep.innerHTML = `
+                <div class="step-header">
+                    <span class="step-number">${currentStep}</span>
+                    <span>Additional Ingredients</span>
+                </div>
+                <div class="step-connector"></div>
+                <div class="blend-inputs">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">➕</div>
+                        <p>Add more ingredients after reduction</p>
+                    </div>
+                </div>
+            `;
+            stepsContainer.appendChild(nextStep);
+            
+            // Auto-focus the reduction input
+            setTimeout(() => {
+                row.querySelector('.reduction-input').focus();
+            }, 100);
+            
+            updateEmptyState();
+            updateMakeButton();
+            updateLiveSummary();
+            saveState();
+        }
+
+        function removeReductionStep(button) {
+            const step = button.closest('.blend-step');
+            const stepNumber = parseInt(step.getAttribute('data-step'));
+            
+            // Remove this step and the next empty ingredient step
+            step.remove();
+            const nextStep = document.querySelector(`.blend-step[data-step="${stepNumber + 1}"]`);
+            if (nextStep) nextStep.remove();
+            
+            // Renumber remaining steps
+            renumberSteps();
+            updateLiveSummary();
+            saveState();
+        }
+
+        function renumberSteps() {
+            const steps = document.querySelectorAll('.blend-step');
+            steps.forEach((step, index) => {
+                step.setAttribute('data-step', index + 1);
+                const stepNumber = step.querySelector('.step-number');
+                if (stepNumber) stepNumber.textContent = index + 1;
+            });
+            currentStep = steps.length;
+        }
+
+        function removeRow(button) {
+            const row = button.parentElement;
+            row.style.transform = 'translateX(-100%)';
+            row.style.opacity = '0';
+            setTimeout(() => {
+                row.remove();
+                updateEmptyState();
+                updateMakeButton();
+                updateProgress();
+                updateLiveSummary();
+                saveState();
+            }, 200);
+        }
+
+        function handleInput(input) {
+            updateMakeButton();
+            updateProgress();
+            updateLiveSummary();
+        }
+
+        function validateInput(input) {
+            const row = input.closest('.input-row');
+            const nameInput = row.querySelector('.ingredient-input');
+            const volumeInput = row.querySelector('.volume-input');
+            
+            if (nameInput && volumeInput) {
+                const name = nameInput.value.trim();
+                const volume = parseFloat(volumeInput.value) || 0;
+                
+                // Remove error states
+                volumeInput.classList.remove('error');
+                
+                // Add error states if needed
+                if (name && volume === 0) {
+                    volumeInput.classList.add('error');
+                    showToast('Volume cannot be zero', 'error');
+                }
+            }
+        }
+
+        function updateEmptyState() {
+            const steps = document.querySelectorAll('.blend-step');
+            steps.forEach(step => {
+                const container = step.querySelector('.blend-inputs');
+                const rows = container.querySelectorAll('.input-row');
+                const emptyState = container.querySelector('.empty-state');
+                
+                if (rows.length === 0 && emptyState) {
+                    emptyState.style.display = 'block';
+                }
+            });
+        }
+
+        function updateMakeButton() {
+            const rows = document.querySelectorAll('.input-row:not(.reduction-row)');
+            const makeBtn = document.getElementById('makeBlendBtn');
+            let hasValidIngredients = false;
+            
+            rows.forEach(row => {
+                const nameInput = row.querySelector('.ingredient-input');
+                const volumeInput = row.querySelector('.volume-input');
+                const name = nameInput?.value?.trim();
+                const volume = parseFloat(volumeInput?.value) || 0;
+                
+                if (name && volume > 0) {
+                    hasValidIngredients = true;
+                }
+            });
+            
+            makeBtn.disabled = !hasValidIngredients;
+            makeBtn.style.opacity = hasValidIngredients ? '1' : '0.5';
+        }
+
+        function updateProgress() {
+            const rows = document.querySelectorAll('.input-row:not(.reduction-row)');
+            const step1 = document.getElementById('step1');
+            const step2 = document.getElementById('step2');
+            const step3 = document.getElementById('step3');
+            
+            // Step 1: Has ingredients
+            step1.classList.toggle('active', rows.length > 0);
+            
+            // Step 2: Has valid blend
+            let hasValidBlend = false;
+            rows.forEach(row => {
+                const nameInput = row.querySelector('.ingredient-input');
+                const volumeInput = row.querySelector('.volume-input');
+                const name = nameInput?.value?.trim();
+                const volume = parseFloat(volumeInput?.value) || 0;
+                
+                if (name && volume > 0) {
+                    hasValidBlend = true;
+                }
+            });
+            step2.classList.toggle('active', hasValidBlend);
+            
+            // Step 3: Has calculated blend
+            step3.classList.toggle('active', document.getElementById('outputSection').classList.contains('active'));
+        }
+
+        function updateLiveSummary() {
+            const ingredientRows = document.querySelectorAll('.input-row:not(.reduction-row)');
+            const reductionRows = document.querySelectorAll('.reduction-row');
+            
+            let totalVolume = 0;
+            let ingredientCount = 0;
+            let totalReduction = 0;
+            
+            // Calculate total volume from ingredients
+            ingredientRows.forEach(row => {
+                const nameInput = row.querySelector('.ingredient-input');
+                const volumeInput = row.querySelector('.volume-input');
+                const name = nameInput?.value?.trim();
+                const volume = parseFloat(volumeInput?.value) || 0;
+                
+                if (name && volume > 0) {
+                    totalVolume += volume;
+                    ingredientCount++;
+                }
+            });
+            
+            // Calculate total reductions
+            reductionRows.forEach(row => {
+                const reductionInput = row.querySelector('.reduction-input');
+                const reduction = parseFloat(reductionInput?.value) || 0;
+                totalReduction += reduction;
+            });
+            
+            // Update display
+            const finalVolume = Math.max(0, totalVolume - totalReduction);
+            document.getElementById('totalVolume').textContent = finalVolume.toFixed(1) + ' mL';
+            document.getElementById('ingredientCount').textContent = ingredientCount;
+            document.getElementById('reductionCount').textContent = reductionRows.length;
+        }
+
+        function showImportDialog() {
+            const overlay = document.createElement('div');
+            overlay.className = 'dialog-overlay';
+            overlay.innerHTML = `
+                <div class="dialog-content">
+                    <h3>Import Blend</h3>
+                    <p>Select how to import your blend:</p>
+                    <div class="import-options">
+                        <label class="import-option">
+                            <input type="radio" name="importType" value="ingredient" checked>
+                            <span>As a single ingredient</span>
+                            <small>The blend will be added as one row</small>
+                        </label>
+                        <label class="import-option">
+                            <input type="radio" name="importType" value="expand">
+                            <span>Expand all ingredients</span>
+                            <small>Each ingredient will be added separately</small>
+                        </label>
+                    </div>
+                    <div class="file-input-wrapper">
+                        <label class="file-input-label">
+                            <span>📁</span> Choose File
+                            <input type="file" accept=".json" id="importFileInput" style="display: none;" onchange="handleFileSelect(event)">
+                        </label>
+                        <span id="fileName" style="margin-left: 12px; color: #64748b;"></span>
+                    </div>
+                    <div class="dialog-buttons">
+                        <button class="btn btn-secondary" onclick="closeDialog()">Cancel</button>
+                        <button class="btn btn-primary" onclick="processImport()" id="importBtn" disabled>Import</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+            
+            // Close on background click
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay) closeDialog();
+            });
+        }
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                document.getElementById('fileName').textContent = file.name;
+                document.getElementById('importBtn').disabled = false;
+            }
+        }
+
+        function processImport() {
+            const fileInput = document.getElementById('importFileInput');
+            const file = fileInput.files[0];
+            if (!file) return;
+            
+            const importType = document.querySelector('input[name="importType"]:checked').value;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const blend = JSON.parse(e.target.result);
+                    
+                    if (importType === 'ingredient') {
+                        // Add as single ingredient
+                        const totalVolume = parseFloat(blend.totalVolume) || 100;
+                        addInputRow(blend.name || 'Imported Blend', totalVolume);
+                        
+                        // Store the blend data for later calculation
+                        const lastRow = document.querySelector('.input-row:last-of-type');
+                        const nameInput = lastRow.querySelector('.ingredient-input');
+                        nameInput.dataset.blend = JSON.stringify(blend);
+                        
+                        showToast(`Imported "${blend.name}" as ingredient`);
+                    } else {
+                        // Expand all ingredients
+                        if (blend.ingredients) {
+                            Object.entries(blend.ingredients).forEach(([name, percentage]) => {
+                                const volume = (parseFloat(percentage) / 100) * parseFloat(blend.totalVolume);
+                                addInputRow(name, volume.toFixed(1));
+                            });
+                            showToast(`Expanded ${Object.keys(blend.ingredients).length} ingredients`);
+                        }
+                    }
+                    
+                    closeDialog();
+                    saveState();
+                } catch (err) {
+                    showToast('Invalid blend file', 'error');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function closeDialog() {
+            const overlay = document.querySelector('.dialog-overlay');
+            if (overlay) overlay.remove();
+        }
+
+        function normalizeIngredientName(name) {
+            return name.trim().toLowerCase();
+        }
+
+        function animateCalculation() {
+            const button = document.getElementById('makeBlendBtn');
+            const originalContent = button.innerHTML;
+            button.innerHTML = '<span>⏳</span> Calculating...';
+            button.disabled = true;
+            
+            // Add visual progress
+            const rows = document.querySelectorAll('.input-row');
+            rows.forEach((row, index) => {
+                setTimeout(() => {
+                    row.classList.add('processing');
+                }, index * 50);
+            });
+            
+            setTimeout(() => {
+                // Reset and show results
+                button.innerHTML = originalContent;
+                button.disabled = false;
+                rows.forEach(row => {
+                    row.classList.remove('processing');
+                });
+            }, 500);
+        }
+
+        function makeBlend() {
+            if (!validateAllInputs()) return;
+            
+            animateCalculation();
+            
+            setTimeout(() => {
+                const steps = document.querySelectorAll('.blend-step');
+                const ingredients = {};
+                let totalVolume = 0;
+                
+                steps.forEach(step => {
+                    const rows = step.querySelectorAll('.input-row');
+                    
+                    rows.forEach(row => {
+                        if (row.classList.contains('reduction-row')) {
+                            const reductionInput = row.querySelector('.reduction-input');
+                            const reductionAmount = parseFloat(reductionInput.value) || 0;
+                            if (reductionAmount > 0 && totalVolume > 0) {
+                                const reductionFactor = Math.max(0, (totalVolume - reductionAmount) / totalVolume);
+                                Object.keys(ingredients).forEach(ing => {
+                                    ingredients[ing] *= reductionFactor;
+                                });
+                                totalVolume = Math.max(0, totalVolume - reductionAmount);
+                            }
+                        } else {
+                            const nameInput = row.querySelector('.ingredient-input');
+                            const volumeInput = row.querySelector('.volume-input');
+                            const name = nameInput.value.trim();
+                            const volume = parseFloat(volumeInput.value) || 0;
+                            
+                            if (name && volume > 0) {
+                                if (nameInput.dataset.blend) {
+                                    const blend = JSON.parse(nameInput.dataset.blend);
+                                    if (blend.ingredients) {
+                                        Object.entries(blend.ingredients).forEach(([ing, pct]) => {
+                                            const normalizedName = normalizeIngredientName(ing);
+                                            const actualVolume = (parseFloat(pct) / 100) * volume;
+                                            ingredients[normalizedName] = (ingredients[normalizedName] || 0) + actualVolume;
+                                        });
+                                    }
+                                } else {
+                                    const normalizedName = normalizeIngredientName(name);
+                                    ingredients[normalizedName] = (ingredients[normalizedName] || 0) + volume;
+                                    totalVolume += volume;
+                                }
+                            }
+                        }
+                    });
+                });
+                
+                // Calculate percentages
+                const finalBlend = {};
+                Object.entries(ingredients).forEach(([name, volume]) => {
+                    finalBlend[name] = ((volume / totalVolume) * 100).toFixed(2);
+                });
+                
+                currentBlend = {
+                    name: 'Untitled Blend',
+                    created: new Date().toISOString(),
+                    totalVolume: totalVolume.toFixed(2),
+                    ingredients: finalBlend
+                };
+                
+                displayOutput(currentBlend);
+                updateProgress();
+                showToast('Blend calculated successfully!');
+                saveState();
+            }, 600);
+        }
+
+        function validateAllInputs() {
+            const errors = [];
+            const rows = document.querySelectorAll('.input-row:not(.reduction-row)');
+            
+            let hasValidIngredient = false;
+            
+            rows.forEach((row, index) => {
+                const name = row.querySelector('.ingredient-input').value.trim();
+                const volume = parseFloat(row.querySelector('.volume-input').value) || 0;
+                
+                if (name && volume === 0) {
+                    errors.push(`Row ${index + 1}: Volume cannot be zero`);
+                }
+                if (!name && volume > 0) {
+                    errors.push(`Row ${index + 1}: Missing ingredient name`);
+                }
+                if (name && volume > 0) {
+                    hasValidIngredient = true;
+                }
+            });
+            
+            if (!hasValidIngredient) {
+                errors.push('Please add at least one complete ingredient');
+            }
+            
+            if (errors.length > 0) {
+                showToast(errors[0], 'error');
+                return false;
+            }
+            return true;
+        }
+
+        function displayOutput(blend) {
+            const outputSection = document.getElementById('outputSection');
+            const outputContent = document.getElementById('outputContent');
+            
+            let output = `Blend: ${blend.name}\n`;
+            output += `Created: ${new Date(blend.created).toLocaleString()}\n`;
+            output += `Total Volume: ${blend.totalVolume} mL\n\n`;
+            output += `Composition:\n`;
+            output += `${'='.repeat(50)}\n`;
+            
+            Object.entries(blend.ingredients)
+                .sort((a, b) => parseFloat(b[1]) - parseFloat(a[1]))
+                .forEach(([name, percentage]) => {
+                    const formattedName = name.charAt(0).toUpperCase() + name.slice(1);
+                    output += `${formattedName.padEnd(30, '.')} ${percentage}%\n`;
+                });
+            
+            output += `${'='.repeat(50)}\n`;
+            output += `Total: 100.00%`;
+            
+            outputContent.textContent = output;
+            outputSection.classList.add('active');
+            
+            // Hide input section and show output
+            document.querySelector('.blend-steps').style.display = 'none';
+            document.querySelector('.import-section').style.display = 'none';
+            document.querySelector('.common-blends-section').style.display = 'none';
+            document.querySelector('.button-group').style.display = 'none';
+            
+            // Scroll to output
+            setTimeout(() => {
+                outputSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 200);
+        }
+
+        function goBack() {
+            const outputSection = document.getElementById('outputSection');
+            outputSection.classList.remove('active');
+            
+            // Show input sections again
+            document.querySelector('.blend-steps').style.display = 'block';
+            document.querySelector('.import-section').style.display = 'block';
+            document.querySelector('.common-blends-section').style.display = 'block';
+            document.querySelector('.button-group').style.display = 'flex';
+            
+            updateProgress();
+        }
+
+        function nameBlend() {
+            const name = prompt('Name your blend:', currentBlend.name || 'My Blend');
+            if (name && name.trim()) {
+                currentBlend.name = name.trim();
+                displayOutput(currentBlend);
+                showToast(`Blend renamed to: ${name}`);
+            }
+        }
+
+        function exportBlend() {
+            if (!currentBlend.ingredients) {
+                showToast('No blend to export', 'error');
+                return;
+            }
+            
+            const dataStr = JSON.stringify(currentBlend, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const exportLink = document.createElement('a');
+            exportLink.href = url;
+            exportLink.download = `${currentBlend.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.json`;
+            document.body.appendChild(exportLink);
+            exportLink.click();
+            document.body.removeChild(exportLink);
+            URL.revokeObjectURL(url);
+            
+            showToast('Blend exported successfully!');
+        }
+
+        function resetAll() {
+            if (confirm('Reset all inputs and start fresh?')) {
+                document.getElementById('blendSteps').innerHTML = `
+                    <div class="blend-step" data-step="1">
+                        <div class="step-header">
+                            <span class="step-number">1</span>
+                            <span>Initial Ingredients</span>
+                        </div>
+                        <div class="step-connector"></div>
+                        <div class="blend-inputs" id="blendInputs">
+                            <div class="empty-state" id="emptyState">
+                                <div class="empty-state-icon">🧪</div>
+                                <p>Start by adding your first ingredient</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('outputSection').classList.remove('active');
+                currentBlend = {};
+                currentStep = 1;
+                
+                // Show hidden sections
+                document.querySelector('.blend-steps').style.display = 'block';
+                document.querySelector('.import-section').style.display = 'block';
+                document.querySelector('.common-blends-section').style.display = 'block';
+                document.querySelector('.button-group').style.display = 'flex';
+                
+                updateEmptyState();
+                updateMakeButton();
+                updateProgress();
+                updateLiveSummary();
+                saveState();
+                showToast('Workspace cleared');
+            }
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type}`;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // History Management
+        function saveState() {
+            const state = {
+                steps: document.getElementById('blendSteps').innerHTML,
+                currentStep: currentStep,
+                timestamp: Date.now()
+            };
+            
+            // Remove any states after current index
+            history = history.slice(0, historyIndex + 1);
+            
+            // Add new state
+            history.push(state);
+            historyIndex++;
+            
+            // Limit history to 50 states
+            if (history.length > 50) {
+                history.shift();
+                historyIndex--;
+            }
+            
+            updateHistoryButtons();
+        }
+
+        function undo() {
+            if (historyIndex > 0) {
+                historyIndex--;
+                restoreState(history[historyIndex]);
+                showToast('Undone');
+            }
+        }
+
+        function redo() {
+            if (historyIndex < history.length - 1) {
+                historyIndex++;
+                restoreState(history[historyIndex]);
+                showToast('Redone');
+            }
+        }
+
+        function restoreState(state) {
+            document.getElementById('blendSteps').innerHTML = state.steps;
+            currentStep = state.currentStep;
+            
+            // Reattach event listeners
+            document.querySelectorAll('.ingredient-input').forEach(input => {
+                const id = input.dataset.autocompleteId;
+                document.addEventListener('click', function(e) {
+                    if (!input.parentElement.contains(e.target)) {
+                        const dropdown = document.getElementById(id);
+                        if (dropdown) dropdown.style.display = 'none';
+                    }
+                });
+            });
+            
+            updateEmptyState();
+            updateMakeButton();
+            updateProgress();
+            updateLiveSummary();
+            updateHistoryButtons();
+        }
+
+        function updateHistoryButtons() {
+            document.getElementById('undoBtn').disabled = historyIndex <= 0;
+            document.getElementById('redoBtn').disabled = historyIndex >= history.length - 1;
+        }
+
+        // Autocomplete functionality
+        function handleAutocomplete(input) {
+            const value = input.value.toLowerCase();
+            const dropdownId = input.dataset.autocompleteId;
+            const dropdown = document.getElementById(dropdownId);
+            
+            if (!value || value.length < 2) {
+                dropdown.style.display = 'none';
+                return;
+            }
+            
+            const matches = commonIngredients
+                .filter(item => item.toLowerCase().includes(value))
+                .slice(0, 5);
+            
+            if (matches.length === 0) {
+                dropdown.style.display = 'none';
+                return;
+            }
+            
+            dropdown.innerHTML = matches
+                .map((item, index) => `
+                    <div class="autocomplete-item" 
+                         data-value="${item}"
+                         data-index="${index}"
+                         onclick="selectAutocomplete('${dropdownId}', '${item}')">
+                        ${item}
+                    </div>
+                `).join('');
+            
+            dropdown.style.display = 'block';
+        }
+        
+        function showAutocomplete(input) {
+            if (input.value.length >= 2) {
+                handleAutocomplete(input);
+            }
+        }
+        
+        function selectAutocomplete(dropdownId, value) {
+            const dropdown = document.getElementById(dropdownId);
+            const input = document.querySelector(`[data-autocomplete-id="${dropdownId}"]`);
+            input.value = value;
+            dropdown.style.display = 'none';
+            updateMakeButton();
+            
+            // Focus next input (volume)
+            const volumeInput = input.closest('.input-row').querySelector('.volume-input');
+            if (volumeInput) {
+                volumeInput.focus();
+            }
+        }
+        
+        function handleAutocompleteKeydown(event, input) {
+            const dropdownId = input.dataset.autocompleteId;
+            const dropdown = document.getElementById(dropdownId);
+            const items = dropdown.querySelectorAll('.autocomplete-item');
+            const selected = dropdown.querySelector('.autocomplete-item.selected');
+            let currentIndex = -1;
+            
+            if (selected) {
+                currentIndex = parseInt(selected.dataset.index);
+            }
+            
+            if (event.key === 'ArrowDown') {
+                event.preventDefault();
+                if (currentIndex < items.length - 1) {
+                    currentIndex++;
+                    updateSelection(items, currentIndex);
+                }
+            } else if (event.key === 'ArrowUp') {
+                event.preventDefault();
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    updateSelection(items, currentIndex);
+                }
+            } else if (event.key === 'Enter') {
+                event.preventDefault();
+                if (selected) {
+                    selectAutocomplete(dropdownId, selected.dataset.value);
+                }
+            } else if (event.key === 'Escape') {
+                dropdown.style.display = 'none';
+            } else if (event.key === 'Tab') {
+                dropdown.style.display = 'none';
+            }
+        }
+        
+        function updateSelection(items, index) {
+            items.forEach((item, i) => {
+                if (i === index) {
+                    item.classList.add('selected');
+                } else {
+                    item.classList.remove('selected');
+                }
+            });
+        }
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Ctrl/Cmd + Enter to calculate blend
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                const makeBtn = document.getElementById('makeBlendBtn');
+                if (!makeBtn.disabled) {
+                    makeBlend();
+                }
+            }
+            
+            // Ctrl/Cmd + N to add new ingredient
+            if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+                e.preventDefault();
+                addInputRow();
+            }
+            
+            // Ctrl/Cmd + Z for undo
+            if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
+                e.preventDefault();
+                undo();
+            }
+            
+            // Ctrl/Cmd + Y or Ctrl/Cmd + Shift + Z for redo
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) {
+                e.preventDefault();
+                redo();
+            }
+        });
+
+        // Initialize on load
+        window.onload = init;
+    </script>
+</body>
+</html>
